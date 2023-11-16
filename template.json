@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_EVTAVDTEST_name": {
+            "defaultValue": "EVTAVDTEST",
+            "type": "String"
+        },
+        "galleries_EVTWin10Images_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/galleries/EVTWin10Images",
+            "type": "String"
+        },
+        "disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/disks/EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6",
+            "type": "String"
+        },
+        "networkInterfaces_evtavdtest563_z1_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Network/networkInterfaces/evtavdtest563_z1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2023-03-01",
+            "name": "[parameters('virtualMachines_EVTAVDTEST_name')]",
+            "location": "eastus",
+            "tags": {
+                "evt:machine": "AVD TEST"
+            },
+            "zones": [
+                "1"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D2s_v3"
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "id": "[concat(parameters('galleries_EVTWin10Images_externalid'), '/images/VDIMAGEv12')]"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_EVTAVDTEST_name'), '_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[parameters('disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid')]"
+                        },
+                        "deleteOption": "Detach"
+                    },
+                    "dataDisks": [],
+                    "diskControllerType": "SCSI"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_EVTAVDTEST_name')]",
+                    "adminUsername": "DAAS",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByOS",
+                            "assessmentMode": "ImageDefault",
+                            "enableHotpatching": false
+                        },
+                        "enableVMAgentPlatformUpdates": false
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "TrustedLaunch"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_evtavdtest563_z1_externalid')]",
+                            "properties": {
+                                "deleteOption": "Delete"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                },
+                "licenseType": "Windows_Client"
+            }
+        }
+    ]
+}

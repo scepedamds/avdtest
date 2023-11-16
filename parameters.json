@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_EVTAVDTEST_name": {
+            "value": null
+        },
+        "galleries_EVTWin10Images_externalid": {
+            "value": null
+        },
+        "disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid": {
+            "value": null
+        },
+        "networkInterfaces_evtavdtest563_z1_externalid": {
+            "value": null
+        }
+    }
+}
