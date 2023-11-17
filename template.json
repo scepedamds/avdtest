@@ -2,32 +2,45 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualMachines_EVTAVDTEST_name": {
-            "defaultValue": "EVTAVDTEST",
+          "adminUsername": {
+            "type": "string",
+            "defaultValue": "DAAS",
+         },
+          "adminPassword": {
+            "type": "securestring",
+            "defaultValue": "[concat('Subscription#',substring(resourcegroup().id,8,5))]",
+            "metadata": {
+                "description": "Windows VM local computer administrator password. Default value is: 'Subscription#<resourcegroup id>'"
+        },
+        "virtualMachinename": {
+            "defaultValue": "[concat('EVTAVDSD-', newGuid())]",
             "type": "String"
         },
         "galleries_EVTWin10Images_externalid": {
             "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/galleries/EVTWin10Images",
             "type": "String"
         },
-        "disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid": {
-            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/disks/EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6",
+        "disks_EVTAVDSD_200_OsDisk_200_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/disks/EVTAVDSD_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6",
             "type": "String"
         },
-        "networkInterfaces_evtavdtest563_z1_externalid": {
-            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Network/networkInterfaces/evtavdtest563_z1",
+        "networkInterfaces_evtavdsd_200_nic_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Network/networkInterfaces/evtavdsd-200-nic",
             "type": "String"
         }
     },
-    "variables": {},
+    "variables": {
+         "virtualMachinename": "[concat('EVTAVDSV-', newGuid())]",
+        
+    },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2023-03-01",
-            "name": "[parameters('virtualMachines_EVTAVDTEST_name')]",
+            "name": "[parameters('virtualMachines_EVTAVD_200_name')]",
             "location": "eastus",
             "tags": {
-                "evt:machine": "AVD TEST"
+                "evt:machine": "AVD TEST Deploy"
             },
             "zones": [
                 "1"
@@ -48,11 +61,11 @@
                     },
                     "osDisk": {
                         "osType": "Windows",
-                        "name": "[concat(parameters('virtualMachines_EVTAVDTEST_name'), '_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6')]",
+                        "name": "[concat(parameters('virtualMachinename'), '_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6')]",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "id": "[parameters('disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid')]"
+                            "id": "[parameters('disks_EVTAVDSD_200_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid')]"
                         },
                         "deleteOption": "Detach"
                     },
@@ -60,8 +73,9 @@
                     "diskControllerType": "SCSI"
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_EVTAVDTEST_name')]",
+                    "computerName": "[parameters('virtualMachines_EVTAVDSD_200_name')]",
                     "adminUsername": "DAAS",
+                    "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
                         "provisionVMAgent": true,
                         "enableAutomaticUpdates": true,
@@ -86,7 +100,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[parameters('networkInterfaces_evtavdtest563_z1_externalid')]",
+                            "id": "[parameters('networkInterfaces_evtavdsd_200_nic_externalid')]",
                             "properties": {
                                 "deleteOption": "Delete"
                             }
