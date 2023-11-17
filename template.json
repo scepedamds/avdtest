@@ -20,24 +20,21 @@
             "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/galleries/EVTWin10Images",
             "type": "String"
         },
-        "disks_EVTAVDSD_200_OsDisk_200_externalid": {
+        "disks_EVTAVDTEST_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid": {
             "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Compute/disks/EVTAVDSD_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6",
             "type": "String"
         },
-        "networkInterfaces_evtavdsd_200_nic_externalid": {
-            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Network/networkInterfaces/evtavdsd-200-nic",
+        "networkInterfaces_evtavdtest563_z1_externalid": {
+            "defaultValue": "/subscriptions/780b4317-37f5-4715-bfa1-4e3df085d492/resourceGroups/rg-avdw365-prd-01/providers/Microsoft.Network/networkInterfaces/evtavdtest563_z1",
             "type": "String"
         }
     },
-    "variables": {
-         "virtualMachinename": "[concat('EVTAVDSV-', newGuid())]",
-        
-    },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2023-03-01",
-            "name": "[parameters('virtualMachines_EVTAVD_200_name')]",
+            "name": "[parameters('virtualMachinename')]",
             "location": "eastus",
             "tags": {
                 "evt:machine": "AVD TEST Deploy"
@@ -61,19 +58,18 @@
                     },
                     "osDisk": {
                         "osType": "Windows",
-                        "name": "[concat(parameters('virtualMachinename'), '_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6')]",
+                        "name": "[concat(parameters('virtualMachinename'), '_OsDisk_1_')]",
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "id": "[parameters('disks_EVTAVDSD_200_OsDisk_1_404f5e6d61794eb9a86ea13aca6af6d6_externalid')]"
-                        },
+                    },
                         "deleteOption": "Detach"
                     },
                     "dataDisks": [],
                     "diskControllerType": "SCSI"
                 },
                 "osProfile": {
-                    "computerName": "[parameters('virtualMachines_EVTAVDSD_200_name')]",
+                    "computerName": "[parameters('virtualMachinename')]",
                     "adminUsername": "DAAS",
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
@@ -100,7 +96,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[parameters('networkInterfaces_evtavdsd_200_nic_externalid')]",
+                            "id": "[parameters('networkInterfaces_evtavdtest563_z1_externalid')]",
                             "properties": {
                                 "deleteOption": "Delete"
                             }
